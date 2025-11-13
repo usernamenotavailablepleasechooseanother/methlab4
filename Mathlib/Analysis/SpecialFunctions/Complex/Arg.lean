@@ -287,6 +287,13 @@ theorem arg_of_im_neg {z : ℂ} (hz : z.im < 0) : arg z = -Real.arccos (z.re / �
   rw [← cos_arg h₀, ← Real.cos_neg, Real.arccos_cos, neg_neg]
   exacts [neg_nonneg.2 (arg_neg_iff.2 hz).le, neg_le.2 (neg_pi_lt_arg z).le]
 
+theorem arg_of_im_pos' {z : ℂ} (hz : 0 < z.im) : 0 < arg z := by
+  have h₀ : z ≠ 0 := Ne.symm (mt (congr_arg im) hz.ne)
+  suffices 0 < Real.sin z.arg by
+    contrapose! this
+    exact Real.sin_nonpos_of_nonpos_of_neg_pi_le this (by linarith [Complex.neg_pi_lt_arg z])
+  simp only [sin_arg, lt_div_iff₀ (norm_pos_iff.mpr h₀), zero_mul, hz]
+
 theorem arg_conj (x : ℂ) : arg (conj x) = if arg x = π then π else -arg x := by
   simp_rw [arg_eq_pi_iff, arg, neg_im, conj_im, conj_re, norm_conj, neg_div, neg_neg,
     Real.arcsin_neg]
