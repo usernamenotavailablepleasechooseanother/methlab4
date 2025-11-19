@@ -50,9 +50,7 @@ def polarCoord : OpenPartialHomeomorph (ℝ × ℝ) (ℝ × ℝ) where
     simp only [prodMk_mem_set_prod_eq, mem_Ioi, sqrt_pos, mem_Ioo, Complex.neg_pi_lt_arg,
       true_and, Complex.arg_lt_pi_iff]
     constructor
-    · rcases hxy with hxy | hxy
-      · dsimp at hxy; linarith [sq_pos_of_ne_zero hxy.ne', sq_nonneg y]
-      · linarith [sq_nonneg x, sq_pos_of_ne_zero hxy]
+    · rcases hxy with hxy | hxy <;> dsimp at hxy <;> positivity
     · rcases hxy with hxy | hxy
       · exact Or.inl (le_of_lt hxy)
       · exact Or.inr hxy
@@ -70,9 +68,6 @@ def polarCoord : OpenPartialHomeomorph (ℝ × ℝ) (ℝ × ℝ) where
     rintro ⟨x, y⟩ _
     have A : √(x ^ 2 + y ^ 2) = ‖x + y * Complex.I‖ := by
       rw [Complex.norm_def, Complex.normSq_add_mul_I]
-    have Z := Complex.norm_mul_cos_add_sin_mul_I (x + y * Complex.I)
-    simp only [← Complex.ofReal_cos, ← Complex.ofReal_sin, mul_add, ← Complex.ofReal_mul, ←
-      mul_assoc] at Z
     simp [A]
   open_target := isOpen_Ioi.prod isOpen_Ioo
   open_source :=
